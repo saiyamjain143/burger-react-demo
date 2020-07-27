@@ -22,5 +22,7 @@ const modal = (props) => {
 
 export default React.memo(
   modal,
-  (prevProps, nextProps) => prevProps.show === nextProps.show
+  (prevProps, nextProps) =>
+    prevProps.show === nextProps.show &&
+    prevProps.children === nextProps.children
 );

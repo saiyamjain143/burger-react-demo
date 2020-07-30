@@ -4,6 +4,7 @@ import "./ContactData.css";
 import axios from "../../../axios-orders";
 import Spinner from "../../../components/UI/Spinner/Spinner";
 import Input from "../../../components/UI/Input/Input";
+import { connect } from "react-redux";
 
 class ContactData extends Component {
   state = {
@@ -56,8 +57,8 @@ class ContactData extends Component {
         value: "",
         validation: {
           required: true,
-          minLength: 5,
-          maxLength: 5,
+          minLength: 6,
+          maxLength: 6,
         },
         isValid: false,
         touched: false,
@@ -149,7 +150,7 @@ class ContactData extends Component {
     axios
       .post("/orders.json", {
         ingredients: this.props.ingredients,
-        price: this.props.price,
+        price: this.props.totalPrice,
         customer: {
           name: this.state.orderForm.name.value,
           address: {
@@ -245,5 +246,11 @@ class ContactData extends Component {
     );
   }
 }
+const matchStateToProps = (state) => {
+  return {
+    ingredients: state.ingredients,
+    totalPrice: state.totalPrice,
+  };
+};
 
-export default ContactData;
+export default connect(matchStateToProps)(ContactData);

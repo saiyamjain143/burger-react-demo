@@ -4,28 +4,19 @@ import Burger from "../../components/Burger/Burger";
 import BuildControls from "../../components/Burger/BuildControls/BuildControls";
 import Modal from "../../components/UI/Modal/Modal";
 import OrderSummary from "../../components/Burger/OrderSummary/OrderSummary";
-import axios from "../../axios-orders";
 import Spinner from "../../components//UI/Spinner/Spinner";
 import withErrorHandler from "../../hoc//withErrorHandler/withErrorHandler";
 import { connect } from "react-redux";
-import * as actions from "../../store/actions";
+import * as burgerBuilderActions from "../../store/actions/index";
+import axios from "../../axios-orders";
 
 class BurgerBuilder extends Component {
   state = {
     purchasing: false,
-    loading: false,
-    error: false,
   };
 
   componentDidMount() {
-    // axios
-    //   .get("/ingredients.json")
-    //   .then((response) => {
-    //     this.setState({ ingredients: response.data });
-    //   })
-    //   .catch((error) => {
-    //     this.setState({ error: true });
-    //   });
+    this.props.onIngredientInit();
   }
 
   updatePurchaseState(updatedIngredients) {
@@ -52,13 +43,14 @@ class BurgerBuilder extends Component {
   };
 
   purchaseContinueHandler = () => {
+    this.props.onInitPurchase();
     this.props.history.push("/checkout");
   };
 
   render() {
     let orderSummary = null;
 
-    let burger = this.state.error ? (
+    let burger = this.props.error ? (
       <p style={{ textAlign: "center" }}>Ingredients cannot be loaded..</p>
     ) : (
       <Spinner />
@@ -87,10 +79,6 @@ class BurgerBuilder extends Component {
       );
     }
 
-    if (this.state.loading) {
-      orderSummary = <Spinner />;
-    }
-
     return (
       <Aux>
         <Modal
@@ -107,17 +95,20 @@ class BurgerBuilder extends Component {
 
 const matchStateToProps = (state) => {
   return {
-    ingredients: state.ingredients,
-    totalPrice: state.totalPrice,
+    ingredients: state.burgerBuilder.ingredients,
+    totalPrice: state.burgerBuilder.totalPrice,
+    error: state.burgerBuilder.error,
   };
 };
 
 const matchDispatchToProps = (dispatch) => {
   return {
     onIngredientAdded: (ingName) =>
-      dispatch({ type: actions.ADD_INGREDIENTS, ingredientName: ingName }),
+      dispatch(burgerBuilderActions.addIngredients(ingName)),
     onIngredientRemoved: (ingName) =>
-      dispatch({ type: actions.REMOVE_INGREDIENTS, ingredientName: ingName }),
+      dispatch(burgerBuilderActions.removeIngredients(ingName)),
+    onIngredientInit: () => dispatch(burgerBuilderActions.initIngredients()),
+    onInitPurchase: () => dispatch(burgerBuilderActions.purchaseInit()),
   };
 };
 

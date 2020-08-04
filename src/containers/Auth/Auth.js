@@ -6,6 +6,7 @@ import * as actions from "../../store/actions/index";
 import { connect } from "react-redux";
 import Spinner from "../../components/UI/Spinner/Spinner";
 import { Redirect } from "react-router-dom";
+import { checkValidity } from "../../shared/Utility";
 
 class Auth extends Component {
   state = {
@@ -48,7 +49,7 @@ class Auth extends Component {
     const formElement = { ...formData[inputId] };
     formElement.value = event.target.value;
     if (formElement.validation) {
-      formElement.isValid = this.checkValidity(
+      formElement.isValid = checkValidity(
         formElement.value,
         formElement.validation
       );
@@ -61,20 +62,6 @@ class Auth extends Component {
     }
     this.setState({ controls: formData, formIsValid: formIsValid });
   };
-
-  checkValidity(value, rules) {
-    let isValid = true;
-    if (rules.required) {
-      isValid = value.trim() !== "" && isValid;
-    }
-    if (rules.minLength) {
-      isValid = value.length >= rules.minLength && isValid;
-    }
-    if (rules.maxLength) {
-      isValid = value.length <= rules.maxLength && isValid;
-    }
-    return isValid;
-  }
 
   submitHandler = (event) => {
     event.preventDefault();

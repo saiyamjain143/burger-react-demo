@@ -13,10 +13,10 @@ const sideDrawer = (props) => {
   return (
     <Aux>
       <Backdrop show={props.open} closeBackdrop={props.closed} />
-      <div className={attachedClasses.join(" ")}>
+      <div className={attachedClasses.join(" ")} onClick={props.closed}>
         <Logo height="10%" />
         <nav style={{ marginTop: "10px" }}>
-          <NavigationItems />
+          <NavigationItems isAuthenticated={props.isAuthenticated} />
         </nav>
       </div>
     </Aux>

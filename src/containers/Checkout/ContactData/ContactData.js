@@ -164,9 +164,10 @@ class ContactData extends Component {
         email: this.state.orderForm.email.value,
         phoneNo: this.state.orderForm.phoneNo.value,
       },
+      userId: this.props.userId,
       deliveryMethod: this.state.orderForm.deliveryMethod.value,
     };
-    this.props.onOrderBurger(orderData);
+    this.props.onOrderBurger(orderData, this.props.token);
   };
 
   changedHandler = (event, inputId) => {
@@ -245,13 +246,15 @@ const matchStateToProps = (state) => {
     ingredients: state.burgerBuilder.ingredients,
     totalPrice: state.burgerBuilder.totalPrice,
     loading: state.order.loading,
+    token: state.auth.token,
+    userId: state.auth.userId,
   };
 };
 
 const matchDispatchToProps = (dispatch) => {
   return {
-    onOrderBurger: (orderData) =>
-      dispatch(orderActions.purchaseBurger(orderData)),
+    onOrderBurger: (orderData, token) =>
+      dispatch(orderActions.purchaseBurger(orderData, token)),
   };
 };
 
